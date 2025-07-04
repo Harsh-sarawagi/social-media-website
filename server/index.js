@@ -15,9 +15,20 @@ import postroutes from "./routes/post-routes.js"
 dotenv.config();
 
 const app = express();
+const allowedOrigins = [
+  "http://localhost:5173",                // local dev
+  "https://client-rw4x.onrender.com"      // deployed frontend
+];
+
 app.use(cors({
-  origin: "http://localhost:5173", // your frontend URL
-  credentials: true,               // allow cookies
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
 }));
 app.use(cookieParser());
 app.use(express.json());
