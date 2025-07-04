@@ -168,17 +168,25 @@ export const refreshToken = async (req, res) => {
     if (!token) return res.status(401).json({ error: "Refresh token missing" });
 
     const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
-    const user = await User.findById(decoded.userID).select("-password");
-
+    const user = await User.findById(decoded.userID);
     if (!user) return res.status(401).json({ error: "Invalid refresh token" });
 
-    const { accesstoken } = generateJWTtoken(res, user._id);
+    const accessToken = jwt.sign({ userID: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
 
-    res.status(200).json({ user, accesstoken });
-  } catch (err) {
-    res.status(401).json({ error: "Unauthorized" });
+    res.cookie("accesstoken", accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.status(200).json({ message: "Access token refreshed" });
+  } catch {
+    return res.status(401).json({ error: "Unauthorized" });
   }
 };
+
+
 
 export const checkAuth = async (req, res) => {
   try {
@@ -186,13 +194,11 @@ export const checkAuth = async (req, res) => {
     if (!token) return res.status(401).json({ message: "Access token missing" });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.userID);
-
+    const user = await User.findById(decoded.userID).select("-password");
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    const { password: _, ...userData } = user.toObject();
-    res.status(200).json({ user: userData });
-  } catch (err) {
+    res.status(200).json({ user });
+  } catch {
     res.status(401).json({ message: "Invalid or expired access token" });
   }
 };
