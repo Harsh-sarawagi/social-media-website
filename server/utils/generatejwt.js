@@ -22,4 +22,7 @@ export const generateTokens = (res, userId) => {
     sameSite: "None",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
+  return {accessToken,refreshToken}
 };
+
+export {}
