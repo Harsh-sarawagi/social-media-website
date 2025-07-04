@@ -1,7 +1,7 @@
 import {User} from "../models/user.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { generateJWTtoken } from "../utils/generatejwt.js";
+import { generateTokens } from "../utils/generatejwt.js";
 import {sendEmail} from "../utils/sendemail.js";
 
 export const register = async (req, res) => {
@@ -114,7 +114,7 @@ export const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
 
-    const { accesstoken, refreshtoken } = generateJWTtoken(res, user._id);
+    const { accesstoken, refreshtoken } = generateTokens(res, user._id);
     const { password: _, ...userData } = user.toObject();
 
     res.status(200).json({ user: userData, accesstoken, refreshtoken });
