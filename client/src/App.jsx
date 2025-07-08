@@ -9,6 +9,8 @@ import ProfilePage from "./pages/profile.jsx";
 import SettingsPage from "./pages/settings.jsx";
 import CreatePost from "./pages/createpost.jsx";
 import PostCard from "./pages/postcard.jsx";
+import ForgotPassword from "./pages/forgotpassword.jsx";
+import ResetPassword from "./pages/resetpassword.jsx";
 // import { useEffect } from "react";
 // import useAuthstore from "./store/auth-store.js";
 // import API from "./api/api.js";
@@ -45,6 +47,8 @@ const App = () => {
         <Route path="/signup" element={<CreateAccount />} />
         <Route path="/verify-email" element={<VerifyEmail/>}/>
         <Route path="/login" element={<Login />} />
+        <Route path="/forgotpassword" element={<ForgotPassword/>}/>
+        <Route path="/reset-password" element={<ResetPassword/>}/>
 
         <Route
           path="/"

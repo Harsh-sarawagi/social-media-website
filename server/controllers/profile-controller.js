@@ -7,31 +7,36 @@ export const getProfile = async (req, res) => {
 
   try {
     const user = await User.findOne({ userID })
-      .populate("friendlist", "name profilepicture userID")
-      .populate("posts", "image")
-      .populate("likedposts", "image.url _id")
-      .populate("receivedRequests", "userID profilepicture name")
-      .populate("sentRequests", "userID profilepicture name")
+  .populate("friendlist", "name profilepicture userID")
+  .populate("posts", "image")
+  .populate("likedposts", "image.url _id")
+  .populate("receivedRequests", "userID profilepicture name")
+  .populate("sentRequests", "userID profilepicture name");
 
-    if (!user) return res.status(404).json({ error: "User not found" });
+if (!user) return res.status(404).json({ error: "User not found" });
 
-    const isSelf = user._id.toString() === loggedInUserId;
-    const isFriend = user.friendlist.some(
-      (friend) => friend._id.toString() === loggedInUserId
-    );
+const isSelf = user._id.toString() === loggedInUserId;
+const isFriend = user.friendlist.some(
+  (friend) => friend._id.toString() === loggedInUserId
+);
+const isRequested = user.receivedRequests.some(
+  (request) => request._id.toString() === loggedInUserId
+);
+const isPending = user.sentRequests.some(
+  (request) => request._id.toString() === loggedInUserId
+);
 
-    let role = "stranger";
+let role = "stranger";
 
-    if (isSelf) {
-      role = "self";
-    } else if (isFriend) {
-      role = "friend";
-    } else if (user.receivedRequests.includes(loggedInUserId)) {
-      role = "requested"; // loggedInUser has sent a request → awaiting approval
-    } else if (user.sentRequests.includes(loggedInUserId)) {
-      role = "pending"; // loggedInUser received a request → needs to accept/reject
-    }
-
+if (isSelf) {
+  role = "self";
+} else if (isFriend) {
+  role = "friend";
+} else if (isRequested) {
+  role = "requested"; // loggedInUser has sent a request → awaiting approval
+} else if (isPending) {
+  role = "pending"; // loggedInUser received a request → needs to accept/reject
+}
     const baseProfile = {
       _id: user._id,
       name: user.name,

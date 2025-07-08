@@ -197,72 +197,73 @@ export default function EditProfile() {
 
 
   return (
-    <div className="flex">
-      {/* <Navbar /> */}
-      <div className="w-[100vw] min-h-[100vh] bg-black text-white px-[8rem] py-[4rem] shadow-xl">
-        {/* <h2 className="text-2xl font-semibold mb-6">Edit Profile</h2> */}
+    <div className="flex justify-center bg-black min-h-screen w-full text-white">
+  <div className="w-full max-w-4xl px-4 sm:px-8 py-6 sm:py-10">
+    <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6 mb-8">
+      <img
+        src={form.previewUrl || DEFAULT_PLACEHOLDER}
+        alt="Profile Preview"
+        className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-2 border-pink-500"
+      />
 
-        <div className="flex flex-row items-center justify-between mb-6">
-          <img
-            src={form.previewUrl || DEFAULT_PLACEHOLDER}
-            alt="Profile Preview"
-            className="w-[10rem] h-[10rem] rounded-full object-cover border-2 border-pink-500"
-          />
-          <div className="flex flex-col gap-2">
-            <label className="bg-blue-800 px-4 py-1 rounded-md cursor-pointer hover:bg-blue-700 text-sm">
-              Change picture
-              <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
-            </label>
-            {form.previewUrl && (
-              <button
-                onClick={handleRemove}
-                className="bg-red-700 px-4 py-1 rounded-md text-sm hover:bg-red-600"
-              >
-                Remove picture
-              </button>
-            )}
-          </div>
-        </div>
+      <div className="flex flex-col gap-2">
+        <label className="bg-blue-800 px-4 py-1 rounded-md cursor-pointer hover:bg-blue-700 text-sm text-center">
+          Change picture
+          <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+        </label>
 
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm text-zinc-400 mb-1">Name</label>
-            <input
-              type="text"
-              value={form.name}
-              onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
-              className="w-full px-4 py-2 rounded-md bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-zinc-400 mb-1">Bio</label>
-            <textarea
-              rows="3"
-              value={form.bio}
-              onChange={(e) => setForm((prev) => ({ ...prev, bio: e.target.value }))}
-              className="w-full px-4 py-2 rounded-md bg-zinc-800 text-white resize-none focus:outline-none focus:ring-2 focus:ring-pink-500"
-            />
-          </div>
-        </div>
-
-        <div className="flex justify-end gap-4 mt-6">
+        {form.previewUrl && (
           <button
-            onClick={handleCancel}
-            className="px-4 py-2 rounded-md bg-zinc-700 hover:bg-zinc-600"
+            onClick={handleRemove}
+            className="bg-red-700 px-4 py-1 rounded-md text-sm hover:bg-red-600"
           >
-            Cancel
+            Remove picture
           </button>
-          <button
-            onClick={handleSave}
-            disabled={!hasChanges || isloading}
-            className={`px-4 py-2 rounded-md ${
-              hasChanges ? "bg-blue-700 hover:bg-blue-600" : "bg-zinc-600 cursor-not-allowed"
-            }`}
-          >
-            Save
-          </button>
-        </div>
+        )}
       </div>
     </div>
+
+    <div className="space-y-4">
+      <div>
+        <label className="block text-sm text-zinc-400 mb-1">Name</label>
+        <input
+          type="text"
+          value={form.name}
+          onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
+          className="w-full px-4 py-2 rounded-md bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm text-zinc-400 mb-1">Bio</label>
+        <textarea
+          rows="3"
+          value={form.bio}
+          onChange={(e) => setForm((prev) => ({ ...prev, bio: e.target.value }))}
+          className="w-full px-4 py-2 rounded-md bg-zinc-800 text-white resize-none focus:outline-none focus:ring-2 focus:ring-pink-500"
+        />
+      </div>
+    </div>
+
+    <div className="flex justify-end gap-4 mt-6 flex-wrap">
+      <button
+        onClick={handleCancel}
+        className="px-4 py-2 rounded-md bg-zinc-700 hover:bg-zinc-600"
+      >
+        Cancel
+      </button>
+      <button
+        onClick={handleSave}
+        disabled={!hasChanges || isloading}
+        className={`px-4 py-2 rounded-md ${
+          hasChanges ? "bg-blue-700 hover:bg-blue-600" : "bg-zinc-600 cursor-not-allowed"
+        }`}
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</div>
+
   );
 }

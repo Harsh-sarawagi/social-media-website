@@ -5,9 +5,11 @@ export default function Home(){
     const {user}= useAuthStore();
     console.log("user: ",user)
     return (
-        <div className="bg-black h-screen w-screen"> 
+        <div className="flex flex-col md:flex-row min-h-screen bg-black"> 
         <VerticalNavbar/>
-            {user?.name}
+        <div className="flex w-full h-screen items-center justify-center text-xl text-white">
+            No Recent Activities
+        </div>
         </div>
     )
 }

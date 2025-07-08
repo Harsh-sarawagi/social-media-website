@@ -83,11 +83,19 @@ export default function Login() {
     >
       {loading ? "Logging in..." : "Login"}
     </button>
-
+    <p className="text-center text-sm text-gray-400">
+      Forgot password?{" "}
+      <span
+        onClick={() => navigate("/forgotpassword")}
+        className="text-pink-400 hover:text-pink-500 underline transition duration-150 cursor-pointer"
+      >
+        Reset
+      </span>
+    </p>
     <p className="text-center text-sm text-gray-400">
       Don’t have an account?{" "}
       <span
-        onClick={() => navigate("/create-account")}
+        onClick={() => navigate("/signup")}
         className="text-pink-400 hover:text-pink-500 underline transition duration-150 cursor-pointer"
       >
         Create one

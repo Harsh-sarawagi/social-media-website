@@ -7,6 +7,7 @@ export default function CreatePost() {
   const [imageFile, setImageFile] = useState(null);
 const [imagePreview, setImagePreview] = useState(null);
 const [caption, setCaption] = useState('');
+const [isloading,setisloading] =useState(false)
 // const { user } = useAuthstore();
 
 const handleImageChange = (e) => {
@@ -34,6 +35,7 @@ const uploadImage = async (file) => {
 };
 
 const handleCreatePost = async () => {
+  setisloading(true);
   try {
     let uploadedImage = { imageUrl: "", public_id: "" };
 
@@ -61,23 +63,30 @@ const handleCreatePost = async () => {
   } catch (err) {
     console.error("Error creating post:", err);
     alert('Failed to create post');
+  } finally {
+    // Always stop loading regardless of success or failure
+    setisloading(false);
   }
 };
 
   return (
-    <div className='flex w-screen bg-black'>
-        <VerticalNavbar/>
-        <div className="min-h-screen pl-[6rem] bg-black text-white p-4 flex items-center justify-center">
-      <div className="flex bg-gray-900 rounded-2xl shadow-lg overflow-hidden w-[65vw]">
-        <div className="w-2/3 h-[80vh] bg-gradient-to-br from-pink-900 to-blue-800 flex items-center justify-center object-cover">
+  <div className="flex flex-col min-h-screen w-screen bg-black">
+  <div className="flex flex-col md:flex-row w-full h-full">
+    <VerticalNavbar />
+
+    <div className="flex-1 flex items-center justify-center p-10">
+      <div className="flex flex-col md:flex-row bg-gray-900 rounded-2xl shadow-lg overflow-hidden w-full max-w-xl md:max-w-3xl">
+        
+        {/* Image Upload Section */}
+        <div className="w-full md:w-2/3 aspect-square md:aspect-[1/1] bg-gradient-to-br rounded-2xl from-zinc-800 via-zinc-700 to-black flex items-center justify-center">
           {imagePreview ? (
             <img
               src={imagePreview}
               alt="Preview"
-              className="w-full h-full  object-cover"
+              className="w-full h-full object-cover"
             />
           ) : (
-            <label className="text-center text-white cursor-pointer hover:underline object-cover">
+            <label className="text-center text-white cursor-pointer hover:underline w-full h-full flex items-center justify-center">
               <input
                 type="file"
                 accept="image/*"
@@ -89,23 +98,26 @@ const handleCreatePost = async () => {
           )}
         </div>
 
-        <div className="w-1/3 p-6 flex flex-col justify-between">
+        {/* Caption and Button Section */}
+        <div className="w-full md:w-1/3 p-4 bg-black md:p-6 flex flex-col justify-between">
           <textarea
             placeholder="Write your caption..."
-            className="w-full h-48 p-4 rounded-lg bg-black border border-pink-500 text-white resize-none mb-4"
+            className="w-full h-32 md:h-48 p-4 rounded-lg bg-black border border-pink-500 text-white resize-none mb-4"
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
           ></textarea>
 
-          <button
+          <button disabled={isloading}
             onClick={handleCreatePost}
             className="bg-gradient-to-r from-pink-600 to-blue-600 text-white py-3 px-6 rounded-xl font-bold hover:opacity-90"
           >
-            Create Post
+            {isloading? "Creating post..":"Create Post"}
           </button>
         </div>
       </div>
     </div>
-    </div>
+  </div>
+</div>
+
   );
 }
