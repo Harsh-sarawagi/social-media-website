@@ -2,6 +2,7 @@ import express from 'express';
 import { verifyAccessToken } from '../middleware/verifytoken.js';
 import { Post } from '../models/post.js';
 import { User } from '../models/user.js';
+import { createNotification } from '../utils/createnotification.js';
 
 const router = express.Router();
 
@@ -71,6 +72,12 @@ router.post('/:postId/comment', verifyAccessToken, canAccessPost, async (req, re
     };
     req.post.comments.push(comment);
     await req.post.save();
+    await createNotification({
+      user: req.post.author,
+      from: req.userID,
+      type: 'comment',
+      post: req.post._id
+    });
     res.status(201).json({ message: 'Comment added', comments: req.post.comments });
   } catch (error) {
     res.status(500).json({ message: 'Error adding comment', error: error.message });
@@ -106,6 +113,13 @@ router.post('/:postId/like', verifyAccessToken, canAccessPost, async (req, res) 
       req.post.likes.push(userId);
       await req.post.save();
       await User.findByIdAndUpdate(userId,{$push:{likedposts:postId}})
+      await createNotification({
+        user: req.post.author,
+        from: userId,
+        type: 'like',
+        post: postId
+      });
+
       return res.status(200).json({ message: 'Post liked' });
     } else {
       req.post.likes.splice(index, 1);

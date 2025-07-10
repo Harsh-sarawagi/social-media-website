@@ -1,4 +1,5 @@
 import { User } from "../models/user.js";
+import { createNotification } from "../utils/createnotification.js";
 
 // ✅ Send Friend Request
 export const sendRequest = async (req, res) => {
@@ -25,6 +26,12 @@ export const sendRequest = async (req, res) => {
 
     await User.findByIdAndUpdate(senderId, { $addToSet: { sentRequests: receiverId } });
     await User.findByIdAndUpdate(receiverId, { $addToSet: { receivedRequests: senderId } });
+    await createNotification({
+      user: receiverId, // the one receiving the request
+      from: senderId,   // logged-in user
+      type: 'request_sent'
+    });
+
 
     res.status(201).json({ message: "Friend request sent." });
   } catch (error) {
@@ -51,6 +58,11 @@ export const acceptRequest = async (req, res) => {
     await User.findByIdAndUpdate(senderId, {
       $pull: { sentRequests: receiverId },
       $addToSet: { friendlist: receiverId }
+    });
+    await createNotification({
+      user: senderId, // original requester
+      from: receiverId,
+      type: 'request_accepted'
     });
 
     res.status(200).json({ message: "Friend request accepted." });

@@ -7,6 +7,7 @@ import editroutes from "./routes/editprofile-routes.js";
 import searchroute from "./routes/search-route.js";
 import uploadroute from "./routes/upload-route.js";
 import postroutes from "./routes/post-routes.js";
+import notificationroutes from "./routes/notification-routes.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -48,6 +49,7 @@ app.use("/api/profile", editroutes);       // Edit profile safely under subpath
 app.use("/api", searchroute);                   // Handles /api/search etc.
 app.use("/api/upload", uploadroute);
 app.use("/api/post", postroutes);
+app.use("/api/notification",notificationroutes)
 
 // ✅ Connect DB and Start Server
 connecttodatabase();

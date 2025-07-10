@@ -112,6 +112,7 @@ export default function ProfilePage() {
   );
 
   const renderButtons = () => {
+    if (relation === "friend") return <button className="bg-zinc-700 w-full h-[2rem] mt-4 rounded-xl" onClick={handleunfriend}>Unfriend</button>;
     if (relation === "stranger") return <button className="bg-blue-700 w-full h-[2rem] mt-4 rounded-xl" onClick={handlesendrequest}>Send Request</button>;
     if (relation === "requested") return <button className="bg-zinc-600 w-full h-[2rem] mt-4 rounded-xl" onClick={handledeleterequest}>Requested</button>;
     if (relation === "pending") return (
