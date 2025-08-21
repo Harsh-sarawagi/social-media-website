@@ -23,7 +23,7 @@ API.interceptors.response.use(
         });
         return API(originalRequest);
       } catch {
-        window.location.href = "/accounts/login";
+        window.location.href = "/login";
         return Promise.reject(error);
       }
     }
